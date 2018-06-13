@@ -8,6 +8,7 @@
 #ifndef BITCOIN_EQUIHASH_H
 #define BITCOIN_EQUIHASH_H
 
+#include "compat/endian.h"
 #include "crypto/sha256.h"
 #include "utilstrencodings.h"
 
@@ -21,7 +22,6 @@
 #include <vector>
 
 #include <boost/static_assert.hpp>
-
 
 typedef crypto_generichash_blake2b_state eh_HashState;
 typedef uint32_t eh_index;
@@ -185,14 +185,12 @@ public:
     Equihash() { }
 
     int InitialiseState(eh_HashState& base_state, bool btg_salt);
-#ifdef ENABLE_MINING
     bool BasicSolve(const eh_HashState& base_state,
                     const std::function<bool(std::vector<unsigned char>)> validBlock,
                     const std::function<bool(EhSolverCancelCheck)> cancelled);
     bool OptimisedSolve(const eh_HashState& base_state,
                         const std::function<bool(std::vector<unsigned char>)> validBlock,
                         const std::function<bool(EhSolverCancelCheck)> cancelled);
-#endif
     bool IsValidSolution(const eh_HashState& base_state, std::vector<unsigned char> soln);
 };
 
@@ -219,7 +217,6 @@ static Equihash<144,5> Eh144_5;
         throw std::invalid_argument("Unsupported Equihash parameters"); \
     }
 
-#ifdef ENABLE_MINING
 inline bool EhBasicSolve(unsigned int n, unsigned int k, const eh_HashState& base_state,
                     const std::function<bool(std::vector<unsigned char>)> validBlock,
                     const std::function<bool(EhSolverCancelCheck)> cancelled)
@@ -271,7 +268,6 @@ inline bool EhOptimisedSolveUncancellable(unsigned int n, unsigned int k, const 
     return EhOptimisedSolve(n, k, base_state, validBlock,
                             [](EhSolverCancelCheck pos) { return false; });
 }
-#endif // ENABLE_MINING
 
 #define EhIsValidSolution(n, k, base_state, soln, ret)   \
     if (n == 96 && k == 3) {                             \

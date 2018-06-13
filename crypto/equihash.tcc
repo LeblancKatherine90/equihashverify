@@ -46,4 +46,3 @@ template<size_t WIDTH>
 bool IsValidBranch(const FullStepRow<WIDTH>& a, const size_t len, const unsigned int ilen, const eh_trunc t)
 {
     return TruncateIndex(ArrayToEhIndex(a.hash+len), ilen) == t;
-}

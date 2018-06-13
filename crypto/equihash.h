@@ -8,7 +8,7 @@
 #ifndef BITCOIN_EQUIHASH_H
 #define BITCOIN_EQUIHASH_H
 
-#include "compat/endian.h"
+
 #include "crypto/sha256.h"
 #include "utilstrencodings.h"
 
